@@ -33,6 +33,8 @@ namespace TravellingSalesmanProblemVisualization
             this.RemoveTowns = new System.Windows.Forms.RadioButton();
             this.RemoveAllTowns = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.Start = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,6 +75,8 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.Start);
+            this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Controls.Add(this.AddTowns);
             this.panel1.Controls.Add(this.RemoveAllTowns);
             this.panel1.Controls.Add(this.RemoveTowns);
@@ -80,6 +84,28 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(173, 852);
             this.panel1.TabIndex = 2;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "DynamicProgramming",
+            "Branch&Bound"});
+            this.comboBox1.Location = new System.Drawing.Point(8, 162);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(130, 24);
+            this.comboBox1.TabIndex = 4;
+            this.comboBox1.Text = "Select algorithm";
+            // 
+            // Start
+            // 
+            this.Start.Location = new System.Drawing.Point(8, 209);
+            this.Start.Name = "Start";
+            this.Start.Size = new System.Drawing.Size(130, 29);
+            this.Start.TabIndex = 5;
+            this.Start.Text = "Start";
+            this.Start.UseVisualStyleBackColor = true;
+            this.Start.Click += new System.EventHandler(this.Start_Click);
             // 
             // TravellingSalesman
             // 
@@ -103,6 +129,8 @@ namespace TravellingSalesmanProblemVisualization
         private System.Windows.Forms.RadioButton RemoveTowns;
         private System.Windows.Forms.Button RemoveAllTowns;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Button Start;
     }
 }
 
