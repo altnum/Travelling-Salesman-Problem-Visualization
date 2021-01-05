@@ -6,17 +6,20 @@ using System.Windows.Forms;
 
 namespace TravellingSalesmanProblemVisualization
 {
-    static class Program
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        public static TravellingSalesman travellingSalesman;
+
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TravellingSalesman());
+            travellingSalesman = new TravellingSalesman();
+            Application.Run(travellingSalesman);
         }
     }
 }

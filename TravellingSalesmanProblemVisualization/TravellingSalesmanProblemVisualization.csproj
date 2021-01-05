@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StopController.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StopController.Designer.cs">
+      <DependentUpon>StopController.cs</DependentUpon>
+    </Compile>
     <Compile Include="Town.cs" />
     <Compile Include="TravellingSalesman.cs">
       <SubType>Form</SubType>
@@ -55,6 +61,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="StopController.resx">
+      <DependentUpon>StopController.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TravellingSalesman.resx">
       <DependentUpon>TravellingSalesman.cs</DependentUpon>
     </EmbeddedResource>

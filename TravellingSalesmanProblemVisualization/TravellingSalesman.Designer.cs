@@ -33,9 +33,12 @@ namespace TravellingSalesmanProblemVisualization
             this.RemoveTowns = new System.Windows.Forms.RadioButton();
             this.RemoveAllTowns = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.Start = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.distanceStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // AddTowns
@@ -85,6 +88,16 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.Size = new System.Drawing.Size(173, 852);
             this.panel1.TabIndex = 2;
             // 
+            // Start
+            // 
+            this.Start.Location = new System.Drawing.Point(8, 209);
+            this.Start.Name = "Start";
+            this.Start.Size = new System.Drawing.Size(130, 29);
+            this.Start.TabIndex = 5;
+            this.Start.Text = "Start";
+            this.Start.UseVisualStyleBackColor = true;
+            this.Start.Click += new System.EventHandler(this.Start_Click);
+            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
@@ -97,29 +110,41 @@ namespace TravellingSalesmanProblemVisualization
             this.comboBox1.TabIndex = 4;
             this.comboBox1.Text = "Select algorithm";
             // 
-            // Start
+            // statusStrip1
             // 
-            this.Start.Location = new System.Drawing.Point(8, 209);
-            this.Start.Name = "Start";
-            this.Start.Size = new System.Drawing.Size(130, 29);
-            this.Start.TabIndex = 5;
-            this.Start.Text = "Start";
-            this.Start.UseVisualStyleBackColor = true;
-            this.Start.Click += new System.EventHandler(this.Start_Click);
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.distanceStatus});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 827);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1402, 26);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // distanceStatus
+            // 
+            this.distanceStatus.Name = "distanceStatus";
+            this.distanceStatus.Size = new System.Drawing.Size(73, 20);
+            this.distanceStatus.Text = "Distance: ";
             // 
             // TravellingSalesman
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1402, 853);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "TravellingSalesman";
             this.Text = "TravellingSalesman";
             this.Load += new System.EventHandler(this.TravellingSalesman_Load);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TravellingSalesman_MouseUp);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -131,6 +156,8 @@ namespace TravellingSalesmanProblemVisualization
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button Start;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        public System.Windows.Forms.ToolStripStatusLabel distanceStatus;
     }
 }
 

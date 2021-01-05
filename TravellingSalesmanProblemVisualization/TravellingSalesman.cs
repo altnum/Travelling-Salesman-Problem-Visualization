@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace TravellingSalesmanProblemVisualization
@@ -10,7 +11,13 @@ namespace TravellingSalesmanProblemVisualization
     public partial class TravellingSalesman : Form
     {
         private static LinkedList<Town> towns = new LinkedList<Town>();
-        public static string routes = "";
+        public string routes = "";
+        public static int[,] distancesDPTSP;
+        public static bool closedController = true;
+        public bool pressedStop = false;
+        public ManualResetEvent mre;
+        public bool finishedCalc = false;
+        StopController controllerForm;
         public TravellingSalesman()
         {
             InitializeComponent();
@@ -39,9 +46,12 @@ namespace TravellingSalesmanProblemVisualization
         {
             DrawImage2FloatRectF(e);
             base.OnPaint(e);
-            foreach (Town t in towns)
+            if (towns.Count > 0)
             {
-                t.Paint(e.Graphics);
+                foreach (Town t in towns)
+                {
+                    t.Paint(e.Graphics);
+                }
             }
             if (routes.Length > 1)
             {
@@ -98,6 +108,7 @@ namespace TravellingSalesmanProblemVisualization
         private void RemoveAllTowns_Click(object sender, EventArgs e)
         {
             towns.Clear();
+            routes = "";
             Invalidate();
         }
 
@@ -108,15 +119,58 @@ namespace TravellingSalesmanProblemVisualization
 
         private void Start_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem == "DynamicProgramming")
+            string selectedItem = "";
+
+            if (comboBox1.SelectedItem != null)
+                selectedItem = comboBox1.SelectedItem.ToString();
+
+            if (selectedItem != "")
             {
-                DynamicProgrammingTSP(towns);
+
+                Program.travellingSalesman.Enabled = false;
+                Thread controller = new Thread(openController);
+                controller.Start();
+                
+
+                switch (selectedItem)
+                {
+                    case "DynamicProgramming":
+                        DynamicProgrammingTSP(towns);
+                        if (!pressedStop)
+                        {
+                            Control.CheckForIllegalCrossThreadCalls = false;
+                            controllerForm.timer1.Enabled = false;
+                            mre = new ManualResetEvent(false);
+                            mre.WaitOne();
+                        }
+                        finishedCalc = true;
+                        pressedStop = true;
+                        break;
+                }
+
+                if (pressedStop && finishedCalc)
+                {
+                    routes = "";
+                    distanceStatus.Text = "Distance in km: ";
+                    pressedStop = false;
+                    finishedCalc = false;
+                }
+
+                Invalidate();
+                Update();
             }
+
+        }
+
+        public void openController ()
+        {
+            controllerForm = new StopController();
+            controllerForm.ShowDialog();
         }
 
         public void DynamicProgrammingTSP(LinkedList<Town> towns)
         {
-            var distances = new int[towns.Count, towns.Count];
+            distancesDPTSP = new int[towns.Count, towns.Count];
 
             for (int i = 0; i < towns.Count; i++)
             {
@@ -124,21 +178,17 @@ namespace TravellingSalesmanProblemVisualization
                 {
                     if (i == j)
                     {
-                        distances[i, j] = -1;
+                        distancesDPTSP[i, j] = -1;
                     }
                     else
                     {
-                        distances[i, j] = int.Parse(Math.Ceiling(Math.Sqrt(Math.Pow(towns.ElementAt(i).Location.X - towns.ElementAt(j).Location.X, 2) + Math.Pow(towns.ElementAt(i).Location.Y - towns.ElementAt(j).Location.Y, 2))).ToString());
+                        distancesDPTSP[i, j] = int.Parse(Math.Ceiling((int.Parse(Math.Ceiling(Math.Sqrt(Math.Pow(towns.ElementAt(i).Location.X - towns.ElementAt(j).Location.X, 2) + Math.Pow(towns.ElementAt(i).Location.Y - towns.ElementAt(j).Location.Y, 2))).ToString()) / 3) * 1.8).ToString());
                     }
                 }
             }
 
             string route = "";
-            DPTSP(distances, 0, new List<int>(), out route);
-
-            routes = route;
-
-            Invalidate();
+            DPTSP(distancesDPTSP, 0, new List<int>(), out route);
         }
 
         public int DPTSP(int[,] costs, int from, List<int> visited, out string route)
@@ -147,10 +197,7 @@ namespace TravellingSalesmanProblemVisualization
 
             if (visited.Count() + 1 == costs.GetLength(0))
             {
-                route = from.ToString();
-                routes = route;
-                Invalidate();
-                Update();
+                route = from.ToString() + " 0";
                 return costs[from, 0];
             }
 
@@ -164,6 +211,19 @@ namespace TravellingSalesmanProblemVisualization
                     var subRoute = "";
                     var subSolution = DPTSP(costs, to, visited, out subRoute);
 
+                    mre = new ManualResetEvent(false);
+
+                    if (pressedStop)
+                    {
+                        if (!finishedCalc)
+                            mre.WaitOne();
+
+                        if (pressedStop && finishedCalc)
+                        {
+                            return -1;
+                        }
+                    }
+
                     if (subSolution == -1)
                         continue;
 
@@ -173,10 +233,11 @@ namespace TravellingSalesmanProblemVisualization
                     {
                         route = from + " " + subRoute;
                         min = value;
-                        routes = route;
-                        Invalidate();
-                        Update();
                     }
+
+                    routes = route;
+                    Invalidate();
+                    Update();
                 }
             }
 
@@ -185,22 +246,31 @@ namespace TravellingSalesmanProblemVisualization
             return min == int.MaxValue ? -1 : min;
         }
 
-        public static void DrawPerRoute(string route, PaintEventArgs e)
+        public void DrawPerRoute(string route, PaintEventArgs e)
         {
             int[] routeNodes = Array.ConvertAll<string, int>(route.Split(' '), int.Parse);
+            int distance = 0;
 
             using (var p = new Pen(Color.Black, 2))
             {
                 for (int i = 0; i < routeNodes.Length - 1; i++)
                 {
-
-                    e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
-                    if (routeNodes.Length == towns.Count && i == routeNodes.Length - 2)
+                    if (routeNodes.Length - 1 == towns.Count && i == routeNodes.Length - 2)
                     {
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i + 1]).Location, towns.ElementAt(routeNodes[0]).Location);
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[0]).Location);
+                        distance += distancesDPTSP[routeNodes[i], routeNodes[0]];
                     }
+                    else
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                        distance += distancesDPTSP[routeNodes[i], routeNodes[i + 1]];
+                    }
+
+                    
                 }
             }
+
+            distanceStatus.Text = "Distance in km: " + distance;
         }
     }
 }
