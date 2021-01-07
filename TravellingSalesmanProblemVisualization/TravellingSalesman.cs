@@ -26,6 +26,8 @@ namespace TravellingSalesmanProblemVisualization
         static char[] used;
         static int[] minCycle;
         static int[] cycle;
+
+        public static int minAns = int.MaxValue;
         public TravellingSalesman()
         {
             InitializeComponent();
@@ -67,24 +69,31 @@ namespace TravellingSalesmanProblemVisualization
                     DrawPerRouteDP(routes, e);
                 else if (selectedItem == "Branch&Bound")
                     DrawPerRouteBB(routes, e);
+                else if (selectedItem == "Backtracking")
+                    DrawPerRouteBT(routes, e);
             }
         }
 
         protected void addTown(Point location, Color color)
         {
-            Town newTown = new Town(location, 5, 5, color);
-
-            towns.AddLast(newTown);
-
-            using (var graphics = CreateGraphics())
+            if (towns.Count <= 10)
             {
-                newTown.Paint(graphics);
+                Town newTown = new Town(location, 5, 5, color);
+
+
+                towns.AddLast(newTown);
+
+                using (var graphics = CreateGraphics())
+                {
+                    newTown.Paint(graphics);
+                }
             }
         }
 
         private void TravellingSalesman_MouseUp(object sender, MouseEventArgs e)
         {
-            if (towns.Count > 0 && towns.Count < 30 && AddTowns.Checked) {
+            if (towns.Count > 0 && towns.Count < 30 && AddTowns.Checked)
+            {
                 Point location = new Point(e.Location.X, e.Location.Y);
                 addTown(location, Color.Blue);
             }
@@ -101,7 +110,7 @@ namespace TravellingSalesmanProblemVisualization
                             towns.Remove(t);
                             Invalidate();
                         }
-                    } 
+                    }
                     else
                     {
                         towns.Remove(t);
@@ -169,6 +178,18 @@ namespace TravellingSalesmanProblemVisualization
                             finishedCalc = true;
                             pressedStop = true;
                             break;
+                        case "Backtracking":
+                            BacktrackingTSP(towns);
+                            if (!pressedStop)
+                            {
+                                Control.CheckForIllegalCrossThreadCalls = false;
+                                controllerForm.timer1.Enabled = false;
+                                mre = new ManualResetEvent(false);
+                                mre.WaitOne();
+                            }
+                            finishedCalc = true;
+                            pressedStop = true;
+                            break;
                     }
 
                     if (pressedStop && finishedCalc)
@@ -186,10 +207,98 @@ namespace TravellingSalesmanProblemVisualization
             }
         }
 
-        public void openController ()
+        public void openController()
         {
             controllerForm = new StopController();
             controllerForm.ShowDialog();
+        }
+
+        public void DrawPerRouteDP(string route, PaintEventArgs e)
+        {
+            int[] routeNodes = Array.ConvertAll<string, int>(route.Split(' '), int.Parse);
+            int distance = 0;
+
+            using (var p = new Pen(Color.Black, 2))
+            {
+                for (int i = 0; i < routeNodes.Length - 1; i++)
+                {
+                    if (routeNodes.Length - 1 == towns.Count && i == routeNodes.Length - 2)
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[0]).Location);
+                        distance += distancesDPTSP[routeNodes[i], routeNodes[0]];
+                    }
+                    else
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                        distance += distancesDPTSP[routeNodes[i], routeNodes[i + 1]];
+                    }
+
+
+                }
+            }
+
+            distanceStatus.Text = "Distance in km: " + distance;
+        }
+
+        public void DrawPerRouteBT(string route, PaintEventArgs e)
+        {
+            int[] routeNodes = new int[route.Length];
+            for (int i = 0; i < route.Length; i++)
+            {
+                routeNodes[i] = int.Parse(route[i].ToString());
+            }
+            int distance = 0;
+
+            using (var p = new Pen(Color.Black, 2))
+            {
+                for (int i = 0; i < routeNodes.Length - 1; i++)
+                {
+                    if (routeNodes.Length - 1 == towns.Count && i == routeNodes.Length - 2)
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[0]).Location);
+                        distance += distancesDPTSP[routeNodes[i], routeNodes[0]];
+                    }
+                    else
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                        distance += distancesDPTSP[routeNodes[i], routeNodes[i + 1]];
+                    }
+                }
+            }
+
+            distanceStatus.Text = "Distance in km: " + distance;
+        }
+
+        public void DrawPerRouteBB(string route, PaintEventArgs e)
+        {
+            route = "0" + route;
+            int[] routeNodes = new int[route.Length];
+            for (int i = 0; i < route.Length; i++)
+            {
+                routeNodes[i] = int.Parse(route[i].ToString());
+            }
+            int distance = 0;
+
+            using (var p = new Pen(Color.Black, 2))
+            {
+                for (int i = 0; i < routeNodes.Length - 1; i++)
+                {
+                    if (routeNodes.Length == towns.Count && i == routeNodes.Length - 2)
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                        distance += distancesBBTSP[routeNodes[i], routeNodes[i + 1]];
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i + 1]).Location, towns.ElementAt(routeNodes[0]).Location);
+                        distance += distancesBBTSP[routeNodes[i + 1], routeNodes[0]];
+                    }
+                    else
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                        distance += distancesBBTSP[routeNodes[i], routeNodes[i + 1]];
+                    }
+                }
+            }
+
+            distanceStatus.Text = "Distance in km: " + distance;
         }
 
         public void DynamicProgrammingTSP(LinkedList<Town> towns)
@@ -213,6 +322,117 @@ namespace TravellingSalesmanProblemVisualization
 
             string route = "";
             DPTSP(distancesDPTSP, 0, new List<int>(), out route);
+        }
+
+        public void BranchAndBoundTSP(LinkedList<Town> towns)
+        {
+            distancesBBTSP = new int[towns.Count, towns.Count];
+
+            for (int i = 0; i < towns.Count; i++)
+            {
+                for (int j = 0; j < towns.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        distancesBBTSP[i, j] = 0;
+                    }
+                    else
+                    {
+                        distancesBBTSP[i, j] = int.Parse(Math.Ceiling((int.Parse(Math.Ceiling(Math.Sqrt(Math.Pow(towns.ElementAt(i).Location.X - towns.ElementAt(j).Location.X, 2) + Math.Pow(towns.ElementAt(i).Location.Y - towns.ElementAt(j).Location.Y, 2))).ToString()) / 3) * 1.8).ToString());
+                    }
+                }
+            }
+
+            n = distancesBBTSP.GetLength(0);
+            used = new char[n];
+            minCycle = new int[n];
+            cycle = new int[n];
+
+            int k;
+            for (k = 0; k < n; k++)
+            {
+                used[k] = (char)0;
+            }
+            minSum = int.MaxValue;
+            curSum = 0;
+            cycle[0] = 1;
+            BBTSP(0, 0);
+        }
+
+        private void BacktrackingTSP(LinkedList<Town> towns)
+        {
+            distancesDPTSP = new int[towns.Count, towns.Count];
+
+            for (int i = 0; i < towns.Count; i++)
+            {
+                for (int j = 0; j < towns.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        distancesDPTSP[i, j] = -1;
+                    }
+                    else
+                    {
+                        distancesDPTSP[i, j] = int.Parse(Math.Ceiling((int.Parse(Math.Ceiling(Math.Sqrt(Math.Pow(towns.ElementAt(i).Location.X - towns.ElementAt(j).Location.X, 2) + Math.Pow(towns.ElementAt(i).Location.Y - towns.ElementAt(j).Location.Y, 2))).ToString()) / 3) * 1.8).ToString());
+                    }
+                }
+            }
+
+            routes = "";
+            int n = distancesDPTSP.GetLength(0);
+            bool[] v = new bool[n];
+            v[0] = true;
+            int ans = int.MaxValue;
+            minAns = int.MaxValue;
+            BTTSP(distancesDPTSP, v,0, n, 1, 0, ans, out routes);
+        }
+
+        public int BTTSP(int[,] graph, bool[] v, int currPos, int n, int count, int cost, int ans, out string routes)
+        {
+            routes = "";
+
+            if (count == n && graph[currPos, 0] > 0)
+            {
+                ans = Math.Min(ans, cost + graph[currPos, 0]);
+                routes = currPos.ToString() + "0";
+                Console.WriteLine(routes);
+                return ans;
+            }
+ 
+            for (int i = 0; i < n; i++)
+            {
+                if (v[i] == false && graph[currPos, i] > 0)
+                {
+
+                    v[i] = true;
+                    var subRoute = "";
+                    ans = BTTSP(graph, v, i, n, count + 1, cost + graph[currPos, i], ans, out subRoute);
+
+                    mre = new ManualResetEvent(false);
+
+                    if (pressedStop)
+                    {
+                        if (!finishedCalc)
+                            mre.WaitOne();
+
+                        if (pressedStop && finishedCalc)
+                        {
+                            return -1;
+                        }
+                    }
+
+                    if (ans <= minAns)
+                    {
+                        minAns = ans;
+                        routes = currPos + subRoute;
+
+                        Invalidate();
+                        Update();
+                    }
+                    v[i] = false;
+                }
+            }
+            return ans;
         }
 
         public int DPTSP(int[,] costs, int from, List<int> visited, out string route)
@@ -256,7 +476,7 @@ namespace TravellingSalesmanProblemVisualization
                     if (value < min)
                     {
                         route = from + " " + subRoute;
-                        routes = subRoute;
+                        routes = route;
                         Invalidate();
                         Update();
                         min = value;
@@ -273,100 +493,6 @@ namespace TravellingSalesmanProblemVisualization
             return min == int.MaxValue ? -1 : min;
         }
 
-        public void DrawPerRouteDP(string route, PaintEventArgs e)
-        {
-            int[] routeNodes = Array.ConvertAll<string, int>(route.Split(' '), int.Parse);
-            int distance = 0;
-
-            using (var p = new Pen(Color.Black, 2))
-            {
-                for (int i = 0; i < routeNodes.Length - 1; i++)
-                {
-                    if (routeNodes.Length - 1 == towns.Count && i == routeNodes.Length - 2)
-                    {
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[0]).Location);
-                        distance += distancesDPTSP[routeNodes[i], routeNodes[0]];
-                    }
-                    else
-                    {
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
-                        distance += distancesDPTSP[routeNodes[i], routeNodes[i + 1]];
-                    }
-
-                    
-                }
-            }
-
-            distanceStatus.Text = "Distance in km: " + distance;
-        }
-
-        public void DrawPerRouteBB(string route, PaintEventArgs e)
-        {
-            route = "0" + route;
-            int[] routeNodes = new int[route.Length];
-            for (int i = 0; i < route.Length; i++)
-            {
-                routeNodes[i] = int.Parse(route[i].ToString());
-            }
-            int distance = 0;
-
-            using (var p = new Pen(Color.Black, 2))
-            {
-                for (int i = 0; i < routeNodes.Length - 1; i++)
-                {
-                    if (routeNodes.Length == towns.Count && i == routeNodes.Length - 2)
-                    {
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
-                        distance += distancesBBTSP[routeNodes[i], routeNodes[i + 1]];
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i + 1]).Location, towns.ElementAt(routeNodes[0]).Location);
-                        distance += distancesBBTSP[routeNodes[i + 1], routeNodes[0]];
-                    }
-                    else
-                    {
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
-                        distance += distancesBBTSP[routeNodes[i], routeNodes[i + 1]];
-                    }
-                }
-            }
-
-            distanceStatus.Text = "Distance in km: " + distance;
-        }
-        public void BranchAndBoundTSP(LinkedList<Town> towns)
-        {
-            distancesBBTSP = new int[towns.Count, towns.Count];
-
-            for (int i = 0; i < towns.Count; i++)
-            {
-                for (int j = 0; j < towns.Count; j++)
-                {
-                    if (i == j)
-                    {
-                        distancesBBTSP[i, j] = 0;
-                    }
-                    else
-                    {
-                        distancesBBTSP[i, j] = int.Parse(Math.Ceiling((int.Parse(Math.Ceiling(Math.Sqrt(Math.Pow(towns.ElementAt(i).Location.X - towns.ElementAt(j).Location.X, 2) + Math.Pow(towns.ElementAt(i).Location.Y - towns.ElementAt(j).Location.Y, 2))).ToString()) / 3) * 1.8).ToString());
-                    }
-                }
-            }
-
-            n = distancesBBTSP.GetLength(0);
-            used = new char[n];
-            minCycle = new int[n];
-            cycle = new int[n];
-
-            int k;
-            for (k = 0; k < n; k++)
-            {
-                used[k] = (char)0;
-            }
-            minSum = int.MaxValue;
-            curSum = 0;
-            cycle[0] = 1;
-            BBTSP(0, 0);
-            //printCycle();
-            Console.WriteLine();
-        }
         public static void BBTSP(int i, int level)
         {
             if ((i == 0) && (level > 0))
@@ -404,7 +530,7 @@ namespace TravellingSalesmanProblemVisualization
                     if (curSum < minSum)
                         BBTSP(k, level + 1);
 
-                    
+
 
                     Program.travellingSalesman.mre = new ManualResetEvent(false);
 
