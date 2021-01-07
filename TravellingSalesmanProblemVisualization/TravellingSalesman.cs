@@ -11,13 +11,21 @@ namespace TravellingSalesmanProblemVisualization
     public partial class TravellingSalesman : Form
     {
         private static LinkedList<Town> towns = new LinkedList<Town>();
-        public string routes = "";
+        public static string routes = "";
         public static int[,] distancesDPTSP;
+        public static int[,] distancesBBTSP;
         public static bool closedController = true;
         public bool pressedStop = false;
         public ManualResetEvent mre;
         public bool finishedCalc = false;
         StopController controllerForm;
+        string selectedItem = "";
+
+        static int n;
+        static int curSum, minSum;
+        static char[] used;
+        static int[] minCycle;
+        static int[] cycle;
         public TravellingSalesman()
         {
             InitializeComponent();
@@ -55,7 +63,10 @@ namespace TravellingSalesmanProblemVisualization
             }
             if (routes.Length > 1)
             {
-                DrawPerRoute(routes, e);
+                if (selectedItem == "DynamicProgramming")
+                    DrawPerRouteDP(routes, e);
+                else if (selectedItem == "Branch&Bound")
+                    DrawPerRouteBB(routes, e);
             }
         }
 
@@ -119,47 +130,60 @@ namespace TravellingSalesmanProblemVisualization
 
         private void Start_Click(object sender, EventArgs e)
         {
-            string selectedItem = "";
-
-            if (comboBox1.SelectedItem != null)
-                selectedItem = comboBox1.SelectedItem.ToString();
-
-            if (selectedItem != "")
+            if (towns.Count > 2)
             {
+                if (comboBox1.SelectedItem != null)
+                    selectedItem = comboBox1.SelectedItem.ToString();
 
-                Program.travellingSalesman.Enabled = false;
-                Thread controller = new Thread(openController);
-                controller.Start();
-                
-
-                switch (selectedItem)
+                if (selectedItem != "")
                 {
-                    case "DynamicProgramming":
-                        DynamicProgrammingTSP(towns);
-                        if (!pressedStop)
-                        {
-                            Control.CheckForIllegalCrossThreadCalls = false;
-                            controllerForm.timer1.Enabled = false;
-                            mre = new ManualResetEvent(false);
-                            mre.WaitOne();
-                        }
-                        finishedCalc = true;
-                        pressedStop = true;
-                        break;
-                }
 
-                if (pressedStop && finishedCalc)
-                {
-                    routes = "";
-                    distanceStatus.Text = "Distance in km: ";
-                    pressedStop = false;
-                    finishedCalc = false;
-                }
+                    Program.travellingSalesman.Enabled = false;
+                    Thread controller = new Thread(openController);
+                    controller.Start();
 
-                Invalidate();
-                Update();
+
+                    switch (selectedItem)
+                    {
+                        case "DynamicProgramming":
+                            DynamicProgrammingTSP(towns);
+                            if (!pressedStop)
+                            {
+                                Control.CheckForIllegalCrossThreadCalls = false;
+                                controllerForm.timer1.Enabled = false;
+                                mre = new ManualResetEvent(false);
+                                mre.WaitOne();
+                            }
+                            finishedCalc = true;
+                            pressedStop = true;
+                            break;
+                        case "Branch&Bound":
+                            BranchAndBoundTSP(towns);
+                            if (!pressedStop)
+                            {
+                                Control.CheckForIllegalCrossThreadCalls = false;
+                                controllerForm.timer1.Enabled = false;
+                                mre = new ManualResetEvent(false);
+                                mre.WaitOne();
+                            }
+                            finishedCalc = true;
+                            pressedStop = true;
+                            break;
+                    }
+
+                    if (pressedStop && finishedCalc)
+                    {
+                        routes = "";
+                        distanceStatus.Text = "Distance in km: ";
+                        pressedStop = false;
+                        finishedCalc = false;
+                    }
+
+                    controller.Abort();
+                    Invalidate();
+                    Update();
+                }
             }
-
         }
 
         public void openController ()
@@ -232,6 +256,9 @@ namespace TravellingSalesmanProblemVisualization
                     if (value < min)
                     {
                         route = from + " " + subRoute;
+                        routes = subRoute;
+                        Invalidate();
+                        Update();
                         min = value;
                     }
 
@@ -246,7 +273,7 @@ namespace TravellingSalesmanProblemVisualization
             return min == int.MaxValue ? -1 : min;
         }
 
-        public void DrawPerRoute(string route, PaintEventArgs e)
+        public void DrawPerRouteDP(string route, PaintEventArgs e)
         {
             int[] routeNodes = Array.ConvertAll<string, int>(route.Split(' '), int.Parse);
             int distance = 0;
@@ -271,6 +298,130 @@ namespace TravellingSalesmanProblemVisualization
             }
 
             distanceStatus.Text = "Distance in km: " + distance;
+        }
+
+        public void DrawPerRouteBB(string route, PaintEventArgs e)
+        {
+            route = "0" + route;
+            int[] routeNodes = new int[route.Length];
+            for (int i = 0; i < route.Length; i++)
+            {
+                routeNodes[i] = int.Parse(route[i].ToString());
+            }
+            int distance = 0;
+
+            using (var p = new Pen(Color.Black, 2))
+            {
+                for (int i = 0; i < routeNodes.Length - 1; i++)
+                {
+                    if (routeNodes.Length == towns.Count && i == routeNodes.Length - 2)
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                        distance += distancesBBTSP[routeNodes[i], routeNodes[i + 1]];
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i + 1]).Location, towns.ElementAt(routeNodes[0]).Location);
+                        distance += distancesBBTSP[routeNodes[i + 1], routeNodes[0]];
+                    }
+                    else
+                    {
+                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                        distance += distancesBBTSP[routeNodes[i], routeNodes[i + 1]];
+                    }
+                }
+            }
+
+            distanceStatus.Text = "Distance in km: " + distance;
+        }
+        public void BranchAndBoundTSP(LinkedList<Town> towns)
+        {
+            distancesBBTSP = new int[towns.Count, towns.Count];
+
+            for (int i = 0; i < towns.Count; i++)
+            {
+                for (int j = 0; j < towns.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        distancesBBTSP[i, j] = 0;
+                    }
+                    else
+                    {
+                        distancesBBTSP[i, j] = int.Parse(Math.Ceiling((int.Parse(Math.Ceiling(Math.Sqrt(Math.Pow(towns.ElementAt(i).Location.X - towns.ElementAt(j).Location.X, 2) + Math.Pow(towns.ElementAt(i).Location.Y - towns.ElementAt(j).Location.Y, 2))).ToString()) / 3) * 1.8).ToString());
+                    }
+                }
+            }
+
+            n = distancesBBTSP.GetLength(0);
+            used = new char[n];
+            minCycle = new int[n];
+            cycle = new int[n];
+
+            int k;
+            for (k = 0; k < n; k++)
+            {
+                used[k] = (char)0;
+            }
+            minSum = int.MaxValue;
+            curSum = 0;
+            cycle[0] = 1;
+            BBTSP(0, 0);
+            //printCycle();
+            Console.WriteLine();
+        }
+        public static void BBTSP(int i, int level)
+        {
+            if ((i == 0) && (level > 0))
+            {
+                if (level == n)
+                {
+                    minSum = curSum;
+                    for (int k = 0; k < n; k++)
+                        minCycle[k] = cycle[k];
+                }
+                return;
+            }
+            if (used[i] == 1)
+                return;
+
+            used[i] = (char)1;
+
+            for (int k = 0; k < n; k++)
+                if (distancesBBTSP[i, k] != 0 && k != i)
+                {
+                    cycle[level] = k;
+                    curSum += distancesBBTSP[i, k];
+
+                    foreach (int z in minCycle)
+                    {
+                        if (z != 0)
+                            routes = routes + z;
+                    }
+
+                    Program.travellingSalesman.Invalidate();
+                    Program.travellingSalesman.Update();
+
+                    routes = "";
+
+                    if (curSum < minSum)
+                        BBTSP(k, level + 1);
+
+                    
+
+                    Program.travellingSalesman.mre = new ManualResetEvent(false);
+
+                    if (Program.travellingSalesman.pressedStop)
+                    {
+                        if (!Program.travellingSalesman.finishedCalc)
+                            Program.travellingSalesman.mre.WaitOne();
+
+                        if (Program.travellingSalesman.pressedStop && Program.travellingSalesman.finishedCalc)
+                        {
+                            return;
+                        }
+                    }
+
+                    curSum -= distancesBBTSP[i, k];
+                }
+            used[i] = (char)0;
         }
     }
 }

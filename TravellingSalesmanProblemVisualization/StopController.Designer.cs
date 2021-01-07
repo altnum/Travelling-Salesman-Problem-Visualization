@@ -67,6 +67,7 @@ namespace TravellingSalesmanProblemVisualization
             this.BreakButton.TabIndex = 2;
             this.BreakButton.Text = "Break";
             this.BreakButton.UseVisualStyleBackColor = true;
+            this.BreakButton.Visible = false;
             this.BreakButton.Click += new System.EventHandler(this.BreakButton_Click);
             // 
             // Worktime

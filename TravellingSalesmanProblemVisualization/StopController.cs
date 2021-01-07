@@ -39,6 +39,8 @@ namespace TravellingSalesmanProblemVisualization
                 Program.travellingSalesman.pressedStop = true;
                 ContinueButton.Visible = true;
             }
+
+            BreakButton.Visible = true;
         }
 
         private void ContinueButton_Click(object sender, EventArgs e)
@@ -50,6 +52,8 @@ namespace TravellingSalesmanProblemVisualization
                 Program.travellingSalesman.mre.Set();
                 ContinueButton.Visible = false;
             }
+
+            BreakButton.Visible = false;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
