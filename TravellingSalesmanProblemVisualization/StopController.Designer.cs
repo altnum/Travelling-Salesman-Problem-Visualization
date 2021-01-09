@@ -30,6 +30,7 @@ namespace TravellingSalesmanProblemVisualization
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StopController));
             this.StopButton = new System.Windows.Forms.Button();
             this.ContinueButton = new System.Windows.Forms.Button();
             this.BreakButton = new System.Windows.Forms.Button();
@@ -40,9 +41,11 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // StopButton
             // 
-            this.StopButton.Location = new System.Drawing.Point(12, 12);
+            this.StopButton.Image = ((System.Drawing.Image)(resources.GetObject("StopButton.Image")));
+            this.StopButton.ImageAlign = System.Drawing.ContentAlignment.TopRight;
+            this.StopButton.Location = new System.Drawing.Point(12, 5);
             this.StopButton.Name = "StopButton";
-            this.StopButton.Size = new System.Drawing.Size(75, 28);
+            this.StopButton.Size = new System.Drawing.Size(258, 35);
             this.StopButton.TabIndex = 0;
             this.StopButton.Text = "Stop";
             this.StopButton.UseVisualStyleBackColor = true;
@@ -50,9 +53,9 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // ContinueButton
             // 
-            this.ContinueButton.Location = new System.Drawing.Point(12, 12);
+            this.ContinueButton.Location = new System.Drawing.Point(12, 4);
             this.ContinueButton.Name = "ContinueButton";
-            this.ContinueButton.Size = new System.Drawing.Size(75, 28);
+            this.ContinueButton.Size = new System.Drawing.Size(258, 35);
             this.ContinueButton.TabIndex = 1;
             this.ContinueButton.Text = "Continue";
             this.ContinueButton.UseVisualStyleBackColor = true;
@@ -61,9 +64,9 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // BreakButton
             // 
-            this.BreakButton.Location = new System.Drawing.Point(103, 12);
+            this.BreakButton.Location = new System.Drawing.Point(165, 45);
             this.BreakButton.Name = "BreakButton";
-            this.BreakButton.Size = new System.Drawing.Size(75, 28);
+            this.BreakButton.Size = new System.Drawing.Size(105, 28);
             this.BreakButton.TabIndex = 2;
             this.BreakButton.Text = "Break";
             this.BreakButton.UseVisualStyleBackColor = true;
@@ -90,14 +93,13 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // StopController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(255, 93);
+            this.ClientSize = new System.Drawing.Size(282, 93);
             this.ControlBox = false;
             this.Controls.Add(this.TimeHolder);
             this.Controls.Add(this.Worktime);

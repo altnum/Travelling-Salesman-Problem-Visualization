@@ -117,6 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="StopButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAN5JREFUWEftzMFJAAEUA9EtxKP9V2YPCjIfAhlByHUHcnvk+U9fH5/ffw1Smc3B
+        tuz4BqnM5mBbdnyDVGZzsC07vkEqsznYlh3fIJXZHGzLjm+QymwOtmXHN0hlNgfbsuMbpDKbg23Z8Q1S
+        mc3Btuz4BqnM5mBbdnyDVGZzsC07vkEqsznYlh3fIJXZHGzLjm+QymwOtmXHN0hlNgfbsuMbpDKbg23Z
+        8Q1Smc3Btuz4BqnM5mBbdnyDVGZzsC07vkEqsznYlh3fIJXZHGzLjm+QymwO9vb29vb29tvz/ABXYMuN
+        RAoABwAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

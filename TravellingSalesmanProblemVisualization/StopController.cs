@@ -30,6 +30,7 @@ namespace TravellingSalesmanProblemVisualization
                 Control.CheckForIllegalCrossThreadCalls = false;
                 Program.travellingSalesman.pressedStop = true;
                 ContinueButton.Visible = true;
+                timer1.Enabled = false;
             }
 
             BreakButton.Visible = true;
@@ -37,12 +38,13 @@ namespace TravellingSalesmanProblemVisualization
 
         private void ContinueButton_Click(object sender, EventArgs e)
         {
-            if (Program.travellingSalesman.finishedCalc == false && timer1.Enabled)
+            if (Program.travellingSalesman.finishedCalc == false && !timer1.Enabled)
             {
                 Control.CheckForIllegalCrossThreadCalls = false;
                 Program.travellingSalesman.pressedStop = false;
                 Program.travellingSalesman.mre.Set();
                 ContinueButton.Visible = false;
+                timer1.Enabled = true;
             }
 
             BreakButton.Visible = false;
@@ -51,8 +53,13 @@ namespace TravellingSalesmanProblemVisualization
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (Program.travellingSalesman.finishedCalc)
+            {
                 timer1.Stop();
-            TimeHolder.Text = (int.Parse(TimeHolder.Text) + 1).ToString();
+                BreakButton.Text = "Close";
+                StopButton.Visible = false;
+                BreakButton.Visible = true;
+            }
+            TimeHolder.Text = (String.Format("{0:0.0}", double.Parse(TimeHolder.Text) + 0.1)).ToString();
         }
 
         private void StopController_FormClosed(object sender, FormClosedEventArgs e)
@@ -71,7 +78,15 @@ namespace TravellingSalesmanProblemVisualization
 
                 Program.travellingSalesman.mre.Set();
             }
+            else if (BreakButton.Text == "Close")
+            {
+                BreakButton.Text = "Break";
+                Control.CheckForIllegalCrossThreadCalls = false;
+                Program.travellingSalesman.pressedStop = true;
+                Program.travellingSalesman.Enabled = true;
 
+                Program.travellingSalesman.mre.Set();
+            }
             Close();
         }
     }

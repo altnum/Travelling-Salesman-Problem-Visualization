@@ -161,11 +161,10 @@ namespace TravellingSalesmanProblemVisualization
                             if (!pressedStop)
                             {
                                 Control.CheckForIllegalCrossThreadCalls = false;
-                                controllerForm.timer1.Enabled = false;
+                                finishedCalc = true;
                                 mre = new ManualResetEvent(false);
                                 mre.WaitOne();
                             }
-                            finishedCalc = true;
                             pressedStop = true;
                             break;
                         case "Branch&Bound":
@@ -173,11 +172,10 @@ namespace TravellingSalesmanProblemVisualization
                             if (!pressedStop)
                             {
                                 Control.CheckForIllegalCrossThreadCalls = false;
-                                controllerForm.timer1.Enabled = false;
+                                finishedCalc = true;
                                 mre = new ManualResetEvent(false);
                                 mre.WaitOne();
                             }
-                            finishedCalc = true;
                             pressedStop = true;
                             break;
                         case "Backtracking":
@@ -185,11 +183,10 @@ namespace TravellingSalesmanProblemVisualization
                             if (!pressedStop)
                             {
                                 Control.CheckForIllegalCrossThreadCalls = false;
-                                controllerForm.timer1.Enabled = false;
+                                finishedCalc = true;
                                 mre = new ManualResetEvent(false);
                                 mre.WaitOne();
                             }
-                            finishedCalc = true;
                             pressedStop = true;
                             break;
                     }
@@ -543,7 +540,6 @@ namespace TravellingSalesmanProblemVisualization
 
                     Program.travellingSalesman.Invalidate();
                     Program.travellingSalesman.Update();
-                    Console.WriteLine(routes);
                     routes = "";
 
                     if (curSum < minSum)
