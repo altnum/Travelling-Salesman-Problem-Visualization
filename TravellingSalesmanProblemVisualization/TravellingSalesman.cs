@@ -12,6 +12,7 @@ namespace TravellingSalesmanProblemVisualization
     {
         private static LinkedList<Town> towns = new LinkedList<Town>();
         public static string routes = "";
+        public static string bestRoute = "";
         public static int[,] distancesDPTSP;
         public static int[,] distancesBBTSP;
         public static bool closedController = true;
@@ -28,6 +29,7 @@ namespace TravellingSalesmanProblemVisualization
         static int[] cycle;
 
         public static int minAns = int.MaxValue;
+        public static string newRoute;
         public TravellingSalesman()
         {
             InitializeComponent();
@@ -253,16 +255,8 @@ namespace TravellingSalesmanProblemVisualization
             {
                 for (int i = 0; i < routeNodes.Length - 1; i++)
                 {
-                    if (routeNodes.Length - 1 == towns.Count && i == routeNodes.Length - 2)
-                    {
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[0]).Location);
-                        distance += distancesDPTSP[routeNodes[i], routeNodes[0]];
-                    }
-                    else
-                    {
-                        e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
-                        distance += distancesDPTSP[routeNodes[i], routeNodes[i + 1]];
-                    }
+                    e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
+                    distance += distancesDPTSP[routeNodes[i], routeNodes[i + 1]];    
                 }
             }
 
@@ -369,7 +363,7 @@ namespace TravellingSalesmanProblemVisualization
                 {
                     if (i == j)
                     {
-                        distancesDPTSP[i, j] = -1;
+                        distancesDPTSP[i, j] = 0;
                     }
                     else
                     {
@@ -379,60 +373,85 @@ namespace TravellingSalesmanProblemVisualization
             }
 
             routes = "";
+            bestRoute = "";
             int n = distancesDPTSP.GetLength(0);
             bool[] v = new bool[n];
             v[0] = true;
             int ans = int.MaxValue;
             minAns = int.MaxValue;
-            BTTSP(distancesDPTSP, v,0, n, 1, 0, ans, out routes);
+            BTTSP(distancesDPTSP, v, 0, n, 1, 0, ans);
+            routes = bestRoute;
+            Invalidate();
+            Update();
         }
 
-        public int BTTSP(int[,] graph, bool[] v, int currPos, int n, int count, int cost, int ans, out string routes)
+        public int BTTSP(int[,] graph, bool[] v, int currPos, int n, int count, int cost, int ans)
         {
-            routes = "";
-
             if (count == n && graph[currPos, 0] > 0)
             {
+
+                if (cost + graph[currPos, 0] < ans)
+                {
+                    routes += currPos.ToString() + "0";
+                    bestRoute = routes;
+                    Console.WriteLine(routes);
+                    Invalidate();
+                    Update();
+
+                    newRoute = "";
+                    for (int j = 0; j < routes.Length; j++)
+                    {
+                        if (j == routes.Length - 2)
+                            break;
+                        newRoute += routes[j];
+                    }
+                    routes   = newRoute;
+                }
                 ans = Math.Min(ans, cost + graph[currPos, 0]);
-                routes = currPos.ToString() + "0";
-                Console.WriteLine(routes);
                 return ans;
             }
- 
+            
             for (int i = 0; i < n; i++)
             {
                 if (v[i] == false && graph[currPos, i] > 0)
                 {
-
                     v[i] = true;
-                    var subRoute = "";
-                    ans = BTTSP(graph, v, i, n, count + 1, cost + graph[currPos, i], ans, out subRoute);
-
+                    routes += currPos;
+                    Invalidate();
+                    Update();
+                    ans = BTTSP(graph, v, i, n, count + 1, cost + graph[currPos, i], ans);
+                    
                     mre = new ManualResetEvent(false);
 
                     if (pressedStop)
                     {
                         if (!finishedCalc)
                             mre.WaitOne();
-
+                        
                         if (pressedStop && finishedCalc)
                         {
                             return -1;
                         }
                     }
 
-                    if (ans <= minAns)
-                    {
-                        minAns = ans;
-                        routes = currPos + subRoute;
+                    newRoute = "";
 
-                        Invalidate();
-                        Update();
+                    for (int j = 0; j < routes.Length; j++)
+                    {
+                        if (j == routes.Length - 1)
+                            break;
+                        newRoute += routes[j];
                     }
+                    routes = newRoute;
+                    
                     v[i] = false;
                 }
             }
+            Invalidate();
+            Update();
+
             return ans;
+            
         }
 
         public int DPTSP(int[,] costs, int from, List<int> visited, out string route)
@@ -524,7 +543,7 @@ namespace TravellingSalesmanProblemVisualization
 
                     Program.travellingSalesman.Invalidate();
                     Program.travellingSalesman.Update();
-
+                    Console.WriteLine(routes);
                     routes = "";
 
                     if (curSum < minSum)
