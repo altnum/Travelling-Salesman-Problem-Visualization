@@ -74,6 +74,9 @@ namespace TravellingSalesmanProblemVisualization
                 else if (selectedItem == "Backtracking")
                     DrawPerRouteBT(routes, e);
             }
+
+            if (SpeedBar.Value != 1 && SpeedBar.Value != 0)
+                Thread.Sleep(SpeedBar.Value * 150);
         }
 
         protected void addTown(Point location, Color color)
@@ -348,6 +351,15 @@ namespace TravellingSalesmanProblemVisualization
             curSum = 0;
             cycle[0] = 1;
             BBTSP(0, 0);
+            foreach (int z in minCycle)
+            {
+                if (z != 0)
+                    routes = routes + z;
+            }
+
+            Program.travellingSalesman.Invalidate();
+            Program.travellingSalesman.Update();
+            routes = "";
         }
 
         private void BacktrackingTSP(LinkedList<Town> towns)
@@ -391,7 +403,6 @@ namespace TravellingSalesmanProblemVisualization
                 {
                     routes += currPos.ToString() + "0";
                     bestRoute = routes;
-                    Console.WriteLine(routes);
                     Invalidate();
                     Update();
 
@@ -454,7 +465,6 @@ namespace TravellingSalesmanProblemVisualization
         public int DPTSP(int[,] costs, int from, List<int> visited, out string route)
         {
             route = "";
-
             if (visited.Count() + 1 == costs.GetLength(0))
             {
                 route = from.ToString() + " 0";
@@ -509,7 +519,26 @@ namespace TravellingSalesmanProblemVisualization
             return min == int.MaxValue ? -1 : min;
         }
 
-        public static void BBTSP(int i, int level)
+        private void SpeedBar_ValueChanged(object sender, EventArgs e)
+        {
+            switch (SpeedBar.Value)
+            {
+                case 1:
+                    ToggleSpeed.Text = "Toggle speed: 1.0x";
+                    break;
+                case 2:
+                    ToggleSpeed.Text = "Toggle speed: 0.75x";
+                    break;
+                case 3:
+                    ToggleSpeed.Text = "Toggle speed: 0.5x";
+                    break;
+                case 4:
+                    ToggleSpeed.Text = "Toggle speed: 0.25x";
+                    break;
+            }
+        }
+
+        public void BBTSP(int i, int level)
         {
             if ((i == 0) && (level > 0))
             {
@@ -532,7 +561,7 @@ namespace TravellingSalesmanProblemVisualization
                     cycle[level] = k;
                     curSum += distancesBBTSP[i, k];
 
-                    foreach (int z in minCycle)
+                    foreach (int z in cycle)
                     {
                         if (z != 0)
                             routes = routes + z;

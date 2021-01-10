@@ -30,7 +30,6 @@ namespace TravellingSalesmanProblemVisualization
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StopController));
             this.StopButton = new System.Windows.Forms.Button();
             this.ContinueButton = new System.Windows.Forms.Button();
             this.BreakButton = new System.Windows.Forms.Button();
@@ -41,7 +40,7 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // StopButton
             // 
-            this.StopButton.Image = ((System.Drawing.Image)(resources.GetObject("StopButton.Image")));
+            this.StopButton.Image = global::TravellingSalesmanProblemVisualization.Properties.Resources.Stop1;
             this.StopButton.ImageAlign = System.Drawing.ContentAlignment.TopRight;
             this.StopButton.Location = new System.Drawing.Point(12, 5);
             this.StopButton.Name = "StopButton";
@@ -53,7 +52,7 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // ContinueButton
             // 
-            this.ContinueButton.Location = new System.Drawing.Point(12, 4);
+            this.ContinueButton.Location = new System.Drawing.Point(12, 5);
             this.ContinueButton.Name = "ContinueButton";
             this.ContinueButton.Size = new System.Drawing.Size(258, 35);
             this.ContinueButton.TabIndex = 1;

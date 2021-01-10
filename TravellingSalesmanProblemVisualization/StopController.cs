@@ -33,6 +33,7 @@ namespace TravellingSalesmanProblemVisualization
                 timer1.Enabled = false;
             }
 
+            System.Threading.Thread.Sleep(Program.travellingSalesman.SpeedBar.Value * 150);
             BreakButton.Visible = true;
         }
 

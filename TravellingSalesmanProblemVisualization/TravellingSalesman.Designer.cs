@@ -37,8 +37,11 @@ namespace TravellingSalesmanProblemVisualization
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.distanceStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SpeedBar = new System.Windows.Forms.TrackBar();
+            this.ToggleSpeed = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedBar)).BeginInit();
             this.SuspendLayout();
             // 
             // AddTowns
@@ -65,7 +68,7 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // RemoveAllTowns
             // 
-            this.RemoveAllTowns.Location = new System.Drawing.Point(8, 65);
+            this.RemoveAllTowns.Location = new System.Drawing.Point(17, 65);
             this.RemoveAllTowns.Name = "RemoveAllTowns";
             this.RemoveAllTowns.Size = new System.Drawing.Size(130, 35);
             this.RemoveAllTowns.TabIndex = 0;
@@ -78,6 +81,8 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.ToggleSpeed);
+            this.panel1.Controls.Add(this.SpeedBar);
             this.panel1.Controls.Add(this.Start);
             this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Controls.Add(this.AddTowns);
@@ -90,7 +95,7 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // Start
             // 
-            this.Start.Location = new System.Drawing.Point(8, 209);
+            this.Start.Location = new System.Drawing.Point(17, 301);
             this.Start.Name = "Start";
             this.Start.Size = new System.Drawing.Size(130, 29);
             this.Start.TabIndex = 5;
@@ -105,7 +110,7 @@ namespace TravellingSalesmanProblemVisualization
             "DynamicProgramming",
             "Branch&Bound",
             "Backtracking"});
-            this.comboBox1.Location = new System.Drawing.Point(8, 162);
+            this.comboBox1.Location = new System.Drawing.Point(17, 122);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(130, 24);
             this.comboBox1.TabIndex = 4;
@@ -128,6 +133,26 @@ namespace TravellingSalesmanProblemVisualization
             this.distanceStatus.Size = new System.Drawing.Size(73, 20);
             this.distanceStatus.Text = "Distance: ";
             // 
+            // SpeedBar
+            // 
+            this.SpeedBar.Location = new System.Drawing.Point(17, 198);
+            this.SpeedBar.Maximum = 4;
+            this.SpeedBar.Name = "SpeedBar";
+            this.SpeedBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.SpeedBar.Size = new System.Drawing.Size(130, 56);
+            this.SpeedBar.TabIndex = 4;
+            this.SpeedBar.ValueChanged += new System.EventHandler(this.SpeedBar_ValueChanged);
+            // 
+            // ToggleSpeed
+            // 
+            this.ToggleSpeed.AutoSize = true;
+            this.ToggleSpeed.Location = new System.Drawing.Point(18, 237);
+            this.ToggleSpeed.Name = "ToggleSpeed";
+            this.ToggleSpeed.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ToggleSpeed.Size = new System.Drawing.Size(129, 17);
+            this.ToggleSpeed.TabIndex = 6;
+            this.ToggleSpeed.Text = "Toggle speed: 1.0x";
+            // 
             // TravellingSalesman
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -144,6 +169,7 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,6 +185,8 @@ namespace TravellingSalesmanProblemVisualization
         private System.Windows.Forms.Button Start;
         private System.Windows.Forms.StatusStrip statusStrip1;
         public System.Windows.Forms.ToolStripStatusLabel distanceStatus;
+        public System.Windows.Forms.TrackBar SpeedBar;
+        private System.Windows.Forms.Label ToggleSpeed;
     }
 }
 
