@@ -30,47 +30,13 @@ namespace TravellingSalesmanProblemVisualization
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.StopButton = new System.Windows.Forms.Button();
-            this.ContinueButton = new System.Windows.Forms.Button();
-            this.BreakButton = new System.Windows.Forms.Button();
             this.Worktime = new System.Windows.Forms.Label();
             this.TimeHolder = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.BreakButton = new System.Windows.Forms.Button();
+            this.ContinueButton = new System.Windows.Forms.Button();
+            this.StopButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // StopButton
-            // 
-            this.StopButton.Image = global::TravellingSalesmanProblemVisualization.Properties.Resources.Stop1;
-            this.StopButton.ImageAlign = System.Drawing.ContentAlignment.TopRight;
-            this.StopButton.Location = new System.Drawing.Point(12, 5);
-            this.StopButton.Name = "StopButton";
-            this.StopButton.Size = new System.Drawing.Size(258, 35);
-            this.StopButton.TabIndex = 0;
-            this.StopButton.Text = "Stop";
-            this.StopButton.UseVisualStyleBackColor = true;
-            this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
-            // 
-            // ContinueButton
-            // 
-            this.ContinueButton.Location = new System.Drawing.Point(12, 5);
-            this.ContinueButton.Name = "ContinueButton";
-            this.ContinueButton.Size = new System.Drawing.Size(258, 35);
-            this.ContinueButton.TabIndex = 1;
-            this.ContinueButton.Text = "Continue";
-            this.ContinueButton.UseVisualStyleBackColor = true;
-            this.ContinueButton.Visible = false;
-            this.ContinueButton.Click += new System.EventHandler(this.ContinueButton_Click);
-            // 
-            // BreakButton
-            // 
-            this.BreakButton.Location = new System.Drawing.Point(165, 45);
-            this.BreakButton.Name = "BreakButton";
-            this.BreakButton.Size = new System.Drawing.Size(105, 28);
-            this.BreakButton.TabIndex = 2;
-            this.BreakButton.Text = "Break";
-            this.BreakButton.UseVisualStyleBackColor = true;
-            this.BreakButton.Visible = false;
-            this.BreakButton.Click += new System.EventHandler(this.BreakButton_Click);
             // 
             // Worktime
             // 
@@ -94,17 +60,56 @@ namespace TravellingSalesmanProblemVisualization
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // BreakButton
+            // 
+            this.BreakButton.Image = global::TravellingSalesmanProblemVisualization.Properties.Resources.break7;
+            this.BreakButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.BreakButton.Location = new System.Drawing.Point(156, 45);
+            this.BreakButton.Name = "BreakButton";
+            this.BreakButton.Size = new System.Drawing.Size(129, 36);
+            this.BreakButton.TabIndex = 2;
+            this.BreakButton.Text = "Break";
+            this.BreakButton.UseVisualStyleBackColor = true;
+            this.BreakButton.Visible = false;
+            this.BreakButton.Click += new System.EventHandler(this.BreakButton_Click);
+            // 
+            // ContinueButton
+            // 
+            this.ContinueButton.Image = global::TravellingSalesmanProblemVisualization.Properties.Resources.Continue;
+            this.ContinueButton.ImageAlign = System.Drawing.ContentAlignment.TopRight;
+            this.ContinueButton.Location = new System.Drawing.Point(12, 5);
+            this.ContinueButton.Name = "ContinueButton";
+            this.ContinueButton.Size = new System.Drawing.Size(273, 35);
+            this.ContinueButton.TabIndex = 1;
+            this.ContinueButton.Text = "Continue";
+            this.ContinueButton.UseVisualStyleBackColor = true;
+            this.ContinueButton.Visible = false;
+            this.ContinueButton.Click += new System.EventHandler(this.ContinueButton_Click);
+            // 
+            // StopButton
+            // 
+            this.StopButton.Image = global::TravellingSalesmanProblemVisualization.Properties.Resources.Stop1;
+            this.StopButton.ImageAlign = System.Drawing.ContentAlignment.TopRight;
+            this.StopButton.Location = new System.Drawing.Point(12, 5);
+            this.StopButton.Name = "StopButton";
+            this.StopButton.Size = new System.Drawing.Size(258, 35);
+            this.StopButton.TabIndex = 0;
+            this.StopButton.Text = "Stop";
+            this.StopButton.UseVisualStyleBackColor = true;
+            this.StopButton.Click += new System.EventHandler(this.StopButton_Click);
+            // 
             // StopController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(282, 93);
+            this.ClientSize = new System.Drawing.Size(311, 124);
             this.ControlBox = false;
             this.Controls.Add(this.TimeHolder);
             this.Controls.Add(this.Worktime);
             this.Controls.Add(this.BreakButton);
             this.Controls.Add(this.ContinueButton);
             this.Controls.Add(this.StopButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "StopController";
             this.Text = "Controller";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.StopController_FormClosing);

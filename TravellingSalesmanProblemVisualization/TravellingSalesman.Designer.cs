@@ -33,15 +33,15 @@ namespace TravellingSalesmanProblemVisualization
             this.RemoveTowns = new System.Windows.Forms.RadioButton();
             this.RemoveAllTowns = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ToggleSpeed = new System.Windows.Forms.Label();
+            this.SpeedBar = new System.Windows.Forms.TrackBar();
             this.Start = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.distanceStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.SpeedBar = new System.Windows.Forms.TrackBar();
-            this.ToggleSpeed = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedBar)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // AddTowns
@@ -93,11 +93,33 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.Size = new System.Drawing.Size(173, 852);
             this.panel1.TabIndex = 2;
             // 
+            // ToggleSpeed
+            // 
+            this.ToggleSpeed.AutoSize = true;
+            this.ToggleSpeed.Location = new System.Drawing.Point(18, 237);
+            this.ToggleSpeed.Name = "ToggleSpeed";
+            this.ToggleSpeed.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ToggleSpeed.Size = new System.Drawing.Size(129, 17);
+            this.ToggleSpeed.TabIndex = 6;
+            this.ToggleSpeed.Text = "Toggle speed: 1.0x";
+            // 
+            // SpeedBar
+            // 
+            this.SpeedBar.Location = new System.Drawing.Point(17, 198);
+            this.SpeedBar.Maximum = 4;
+            this.SpeedBar.Name = "SpeedBar";
+            this.SpeedBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.SpeedBar.Size = new System.Drawing.Size(130, 56);
+            this.SpeedBar.TabIndex = 4;
+            this.SpeedBar.ValueChanged += new System.EventHandler(this.SpeedBar_ValueChanged);
+            // 
             // Start
             // 
+            this.Start.Image = global::TravellingSalesmanProblemVisualization.Properties.Resources.Play2;
+            this.Start.ImageAlign = System.Drawing.ContentAlignment.TopRight;
             this.Start.Location = new System.Drawing.Point(17, 301);
             this.Start.Name = "Start";
-            this.Start.Size = new System.Drawing.Size(130, 29);
+            this.Start.Size = new System.Drawing.Size(130, 39);
             this.Start.TabIndex = 5;
             this.Start.Text = "Start";
             this.Start.UseVisualStyleBackColor = true;
@@ -109,7 +131,8 @@ namespace TravellingSalesmanProblemVisualization
             this.comboBox1.Items.AddRange(new object[] {
             "DynamicProgramming",
             "Branch&Bound",
-            "Backtracking"});
+            "Backtracking",
+            "GreedyHCSARR"});
             this.comboBox1.Location = new System.Drawing.Point(17, 122);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(130, 24);
@@ -133,26 +156,6 @@ namespace TravellingSalesmanProblemVisualization
             this.distanceStatus.Size = new System.Drawing.Size(73, 20);
             this.distanceStatus.Text = "Distance: ";
             // 
-            // SpeedBar
-            // 
-            this.SpeedBar.Location = new System.Drawing.Point(17, 198);
-            this.SpeedBar.Maximum = 4;
-            this.SpeedBar.Name = "SpeedBar";
-            this.SpeedBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.SpeedBar.Size = new System.Drawing.Size(130, 56);
-            this.SpeedBar.TabIndex = 4;
-            this.SpeedBar.ValueChanged += new System.EventHandler(this.SpeedBar_ValueChanged);
-            // 
-            // ToggleSpeed
-            // 
-            this.ToggleSpeed.AutoSize = true;
-            this.ToggleSpeed.Location = new System.Drawing.Point(18, 237);
-            this.ToggleSpeed.Name = "ToggleSpeed";
-            this.ToggleSpeed.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ToggleSpeed.Size = new System.Drawing.Size(129, 17);
-            this.ToggleSpeed.TabIndex = 6;
-            this.ToggleSpeed.Text = "Toggle speed: 1.0x";
-            // 
             // TravellingSalesman
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -167,9 +170,9 @@ namespace TravellingSalesmanProblemVisualization
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TravellingSalesman_MouseUp);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedBar)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -71,7 +71,7 @@ namespace TravellingSalesmanProblemVisualization
                     DrawPerRouteDP(routes, e);
                 else if (selectedItem == "Branch&Bound")
                     DrawPerRouteBB(routes, e);
-                else if (selectedItem == "Backtracking")
+                else if (selectedItem == "Backtracking" || selectedItem == "GreedyHCSARR")
                     DrawPerRouteBT(routes, e);
             }
 
@@ -97,12 +97,12 @@ namespace TravellingSalesmanProblemVisualization
 
         private void TravellingSalesman_MouseUp(object sender, MouseEventArgs e)
         {
-            if (towns.Count > 0 && towns.Count < 30 && AddTowns.Checked)
+            if (towns.Count > 0 && towns.Count < 10 && AddTowns.Checked)
             {
                 Point location = new Point(e.Location.X, e.Location.Y);
                 addTown(location, Color.Blue);
             }
-            else if (towns.Count > 0 && towns.Count <= 30 && RemoveTowns.Checked)
+            else if (towns.Count > 0 && towns.Count <= 10 && RemoveTowns.Checked)
             {
                 List<Town> townsForRemoving = towns.Where(town => town.Contains(e.Location)).ToList();
 
@@ -183,6 +183,17 @@ namespace TravellingSalesmanProblemVisualization
                             break;
                         case "Backtracking":
                             BacktrackingTSP(towns);
+                            if (!pressedStop)
+                            {
+                                Control.CheckForIllegalCrossThreadCalls = false;
+                                finishedCalc = true;
+                                mre = new ManualResetEvent(false);
+                                mre.WaitOne();
+                            }
+                            pressedStop = true;
+                            break;
+                        case "GreedyHCSARR":
+                            GreedyHCSARRTSP(towns);
                             if (!pressedStop)
                             {
                                 Control.CheckForIllegalCrossThreadCalls = false;
@@ -293,6 +304,28 @@ namespace TravellingSalesmanProblemVisualization
             }
 
             distanceStatus.Text = "Distance in km: " + distance;
+        }
+
+        public void GreedyHCSARRTSP(LinkedList<Town> towns)
+        {
+            distancesDPTSP = new int[towns.Count, towns.Count];
+
+            for (int i = 0; i < towns.Count; i++)
+            {
+                for (int j = 0; j < towns.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        distancesDPTSP[i, j] = 0;
+                    }
+                    else
+                    {
+                        distancesDPTSP[i, j] = int.Parse(Math.Ceiling((int.Parse(Math.Ceiling(Math.Sqrt(Math.Pow(towns.ElementAt(i).Location.X - towns.ElementAt(j).Location.X, 2) + Math.Pow(towns.ElementAt(i).Location.Y - towns.ElementAt(j).Location.Y, 2))).ToString()) / 3) * 1.8).ToString());
+                    }
+                }
+            }
+
+            var suboptimalSolution = HCSARR(new Random(), distancesDPTSP, DateTime.Now.AddSeconds(12));
         }
 
         public void DynamicProgrammingTSP(LinkedList<Town> towns)
@@ -592,6 +625,127 @@ namespace TravellingSalesmanProblemVisualization
                     curSum -= distancesBBTSP[i, k];
                 }
             used[i] = (char)0;
+        }
+
+        public int[] HCSARR(Random r, int[,] costs, DateTime deadline)
+        {
+            var bestVal = int.MaxValue;
+            var bestSol = RandomSolution(r, costs.GetLength(0));
+            var currentVal = bestVal;
+            var currentSol = bestSol;
+
+            while (DateTime.Now < deadline)
+            {
+                var newSol = NextSolution(costs, currentSol);
+                var newVal = Evaluate(costs, bestVal, newSol);
+
+                if (newVal < currentVal)
+                {
+                    currentSol = newSol;
+                    currentVal = newVal;
+                }
+                else
+                {
+                    if (currentVal < bestVal)
+                    {
+                        bestVal = currentVal;
+                        bestSol = currentSol;
+                    }
+                    currentSol = RandomSolution(r, costs.GetLength(0));
+                    currentVal = Evaluate(costs, bestVal, currentSol);
+                }
+
+                routes = "";
+
+                for (int i = 0; i < currentSol.Length; i++)
+                {
+                    routes += currentSol[i];
+                }
+
+                Invalidate();
+                Update();
+
+                mre = new ManualResetEvent(false);
+
+                if (pressedStop)
+                {
+                    if (!finishedCalc)
+                        mre.WaitOne();
+
+                    if (pressedStop && finishedCalc)
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            routes = "";
+
+            for (int i = 0; i < bestSol.Length; i++)
+            {
+                routes += bestSol[i];
+            }
+
+            Invalidate();
+            Update();
+
+            return bestSol;
+        }
+
+        public static int[] RandomSolution(Random r, int size)
+        {
+            var result = new int[size + 1];
+            result[0] = 0;
+            List<int> used = new List<int>();
+
+            for (int i = 1; i < size; i++)
+            {
+                int next = r.Next(1, size);
+                if (!used.Contains(next))
+                {
+                    result[i] = next;
+                    used.Add(next);
+                }
+                else
+                    i--;
+            }
+
+            return result;
+        }
+
+        public static int[] NextSolution(int[,] costs, int[] solution)
+        {
+            var result = solution.ToArray();
+
+            var best = result;
+            var bestVal = int.MaxValue;
+
+            for (int i = 1; i < result.Length - 1; i++)
+            {
+                result[i] = Math.Abs(result[i] - 1);
+                if (result[i] == 0)
+                    result[i] += costs.GetLength(0) - 1;
+            }
+
+            var val = Evaluate(costs, bestVal, result);
+
+            if (val < bestVal)
+            {
+                best = result;
+            }
+
+            return best;
+        }
+        static int Evaluate(int[,] costs, int bestVal, int[] solution)
+        {
+            int distance = 0;
+            for (int i = 0; i < solution.Length - 1; i++)
+            {
+                distance += costs[solution[i], solution[i + 1]];
+            }
+            if (distance < bestVal)
+                return distance;
+            return bestVal;
         }
     }
 }
