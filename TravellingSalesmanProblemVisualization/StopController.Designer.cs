@@ -41,7 +41,7 @@ namespace TravellingSalesmanProblemVisualization
             // Worktime
             // 
             this.Worktime.AutoSize = true;
-            this.Worktime.Location = new System.Drawing.Point(12, 56);
+            this.Worktime.Location = new System.Drawing.Point(12, 65);
             this.Worktime.Name = "Worktime";
             this.Worktime.Size = new System.Drawing.Size(98, 17);
             this.Worktime.TabIndex = 3;
@@ -50,7 +50,7 @@ namespace TravellingSalesmanProblemVisualization
             // TimeHolder
             // 
             this.TimeHolder.AutoSize = true;
-            this.TimeHolder.Location = new System.Drawing.Point(116, 56);
+            this.TimeHolder.Location = new System.Drawing.Point(116, 65);
             this.TimeHolder.Name = "TimeHolder";
             this.TimeHolder.Size = new System.Drawing.Size(16, 17);
             this.TimeHolder.TabIndex = 4;
@@ -64,7 +64,7 @@ namespace TravellingSalesmanProblemVisualization
             // 
             this.BreakButton.Image = global::TravellingSalesmanProblemVisualization.Properties.Resources.break7;
             this.BreakButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.BreakButton.Location = new System.Drawing.Point(156, 45);
+            this.BreakButton.Location = new System.Drawing.Point(177, 55);
             this.BreakButton.Name = "BreakButton";
             this.BreakButton.Size = new System.Drawing.Size(129, 36);
             this.BreakButton.TabIndex = 2;
@@ -79,7 +79,7 @@ namespace TravellingSalesmanProblemVisualization
             this.ContinueButton.ImageAlign = System.Drawing.ContentAlignment.TopRight;
             this.ContinueButton.Location = new System.Drawing.Point(12, 5);
             this.ContinueButton.Name = "ContinueButton";
-            this.ContinueButton.Size = new System.Drawing.Size(273, 35);
+            this.ContinueButton.Size = new System.Drawing.Size(294, 44);
             this.ContinueButton.TabIndex = 1;
             this.ContinueButton.Text = "Continue";
             this.ContinueButton.UseVisualStyleBackColor = true;
@@ -102,7 +102,7 @@ namespace TravellingSalesmanProblemVisualization
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(311, 124);
+            this.ClientSize = new System.Drawing.Size(334, 145);
             this.ControlBox = false;
             this.Controls.Add(this.TimeHolder);
             this.Controls.Add(this.Worktime);

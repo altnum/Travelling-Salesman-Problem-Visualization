@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -233,6 +235,9 @@ namespace TravellingSalesmanProblemVisualization
 
             using (var p = new Pen(Color.Black, 2))
             {
+                AdjustableArrowCap myCap = new AdjustableArrowCap(4, 4);
+                p.CustomEndCap = myCap;
+
                 for (int i = 0; i < routeNodes.Length - 1; i++)
                 {
                     if (routeNodes.Length - 1 == towns.Count && i == routeNodes.Length - 2)
@@ -264,6 +269,9 @@ namespace TravellingSalesmanProblemVisualization
 
             using (var p = new Pen(Color.Black, 2))
             {
+                AdjustableArrowCap myCap = new AdjustableArrowCap(4, 4);
+                p.CustomEndCap = myCap;
+
                 for (int i = 0; i < routeNodes.Length - 1; i++)
                 {
                     e.Graphics.DrawLine(p, towns.ElementAt(routeNodes[i]).Location, towns.ElementAt(routeNodes[i + 1]).Location);
@@ -286,6 +294,9 @@ namespace TravellingSalesmanProblemVisualization
 
             using (var p = new Pen(Color.Black, 2))
             {
+                AdjustableArrowCap myCap = new AdjustableArrowCap(4, 4);
+                p.CustomEndCap = myCap;
+
                 for (int i = 0; i < routeNodes.Length - 1; i++)
                 {
                     if (routeNodes.Length == towns.Count && i == routeNodes.Length - 2)
@@ -325,7 +336,7 @@ namespace TravellingSalesmanProblemVisualization
                 }
             }
 
-            var suboptimalSolution = HCSARR(new Random(), distancesDPTSP, DateTime.Now.AddSeconds(12));
+            var suboptimalSolution = HCSARR(new Random(), distancesDPTSP, DateTime.Now.AddSeconds(4));
         }
 
         public void DynamicProgrammingTSP(LinkedList<Town> towns)
@@ -736,6 +747,12 @@ namespace TravellingSalesmanProblemVisualization
 
             return best;
         }
+
+        private void LearnMore_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://tspalgorithms.free.bg/LearnMore.docx");
+        }
+
         static int Evaluate(int[,] costs, int bestVal, int[] solution)
         {
             int distance = 0;

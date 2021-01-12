@@ -33,12 +33,14 @@ namespace TravellingSalesmanProblemVisualization
             this.RemoveTowns = new System.Windows.Forms.RadioButton();
             this.RemoveAllTowns = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.LearnMore = new System.Windows.Forms.Button();
             this.ToggleSpeed = new System.Windows.Forms.Label();
             this.SpeedBar = new System.Windows.Forms.TrackBar();
             this.Start = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.distanceStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedBar)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -81,6 +83,7 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.LearnMore);
             this.panel1.Controls.Add(this.ToggleSpeed);
             this.panel1.Controls.Add(this.SpeedBar);
             this.panel1.Controls.Add(this.Start);
@@ -92,6 +95,16 @@ namespace TravellingSalesmanProblemVisualization
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(173, 852);
             this.panel1.TabIndex = 2;
+            // 
+            // LearnMore
+            // 
+            this.LearnMore.Location = new System.Drawing.Point(8, 798);
+            this.LearnMore.Name = "LearnMore";
+            this.LearnMore.Size = new System.Drawing.Size(130, 23);
+            this.LearnMore.TabIndex = 4;
+            this.LearnMore.Text = "Learn More...";
+            this.LearnMore.UseVisualStyleBackColor = true;
+            this.LearnMore.Click += new System.EventHandler(this.LearnMore_Click);
             // 
             // ToggleSpeed
             // 
@@ -153,8 +166,8 @@ namespace TravellingSalesmanProblemVisualization
             // distanceStatus
             // 
             this.distanceStatus.Name = "distanceStatus";
-            this.distanceStatus.Size = new System.Drawing.Size(73, 20);
-            this.distanceStatus.Text = "Distance: ";
+            this.distanceStatus.Size = new System.Drawing.Size(113, 20);
+            this.distanceStatus.Text = "Distance in km: ";
             // 
             // TravellingSalesman
             // 
@@ -164,6 +177,8 @@ namespace TravellingSalesmanProblemVisualization
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TravellingSalesman";
             this.Text = "TravellingSalesman";
             this.Load += new System.EventHandler(this.TravellingSalesman_Load);
@@ -190,6 +205,8 @@ namespace TravellingSalesmanProblemVisualization
         public System.Windows.Forms.ToolStripStatusLabel distanceStatus;
         public System.Windows.Forms.TrackBar SpeedBar;
         private System.Windows.Forms.Label ToggleSpeed;
+        public System.Windows.Forms.HelpProvider helpProvider1;
+        private System.Windows.Forms.Button LearnMore;
     }
 }
 
