@@ -45,8 +45,7 @@ namespace TravellingSalesmanProblemVisualization
 
         public void DrawImage2FloatRectF(PaintEventArgs e)
         {
-            Image newImage = Image.FromFile("D:\\Travelling salesman problem visualization\\TravellingSalesmanProblemVisualization\\Resources\\3178.png");
-
+            Image newImage = Image.FromFile(System.AppDomain.CurrentDomain.BaseDirectory + "../../Resources/3178.png");
             float x = 130.0F;
             float y = 0.0F;
 

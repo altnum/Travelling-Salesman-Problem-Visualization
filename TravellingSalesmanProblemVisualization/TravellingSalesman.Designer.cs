@@ -98,7 +98,7 @@ namespace TravellingSalesmanProblemVisualization
             // 
             // LearnMore
             // 
-            this.LearnMore.Location = new System.Drawing.Point(8, 798);
+            this.LearnMore.Location = new System.Drawing.Point(8, 789);
             this.LearnMore.Name = "LearnMore";
             this.LearnMore.Size = new System.Drawing.Size(130, 23);
             this.LearnMore.TabIndex = 4;
