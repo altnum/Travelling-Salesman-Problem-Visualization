@@ -385,8 +385,7 @@ namespace TravellingSalesmanProblemVisualization
             minCycle = new int[n];
             cycle = new int[n];
 
-            int k;
-            for (k = 0; k < n; k++)
+            for (int k = 0; k < n; k++)
             {
                 used[k] = (char)0;
             }
@@ -430,7 +429,6 @@ namespace TravellingSalesmanProblemVisualization
             bool[] v = new bool[n];
             v[0] = true;
             int ans = int.MaxValue;
-            minAns = int.MaxValue;
             BTTSP(distancesDPTSP, v, 0, n, 1, 0, ans);
             routes = bestRoute;
             Invalidate();
@@ -456,7 +454,7 @@ namespace TravellingSalesmanProblemVisualization
                             break;
                         newRoute += routes[j];
                     }
-                    routes   = newRoute;
+                    routes = newRoute;
                 }
                 ans = Math.Min(ans, cost + graph[currPos, 0]);
                 return ans;
